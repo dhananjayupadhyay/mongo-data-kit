@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>MongoDataKit.Persistence</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MongoDataKit.Abstractions\MongoDataKit.Abstractions.csproj" />
+    <ProjectReference Include="..\MongoDataKit.Accessors\MongoDataKit.Accessors.csproj" />
+    <ProjectReference Include="..\MongoDataKit.Core\MongoDataKit.Core.csproj" />
+  </ItemGroup>
+
+</Project>

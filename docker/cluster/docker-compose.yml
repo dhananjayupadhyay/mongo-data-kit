@@ -1,0 +1,70 @@
+version: "3.4"
+
+services:
+  mongo1:
+    image: mongo
+    hostname: mongo1
+    container_name: mongodatakit_mongo1
+    volumes:
+      - mongodatakit_data1:/data/db
+    ports:
+      - 27018:27017
+    restart: always
+    command: mongod --replSet mongo-replica-set
+
+  mongo2:
+    image: mongo
+    hostname: mongo2
+    container_name: mongodatakit_mongo2
+    volumes:
+      - mongodatakit_data2:/data/db
+    ports:
+      - 27019:27017
+    restart: always
+    command: mongod --replSet mongo-replica-set
+
+  mongo3:
+    image: mongo
+    hostname: mongo3
+    container_name: mongodatakit_mongo3
+    volumes:
+      - mongodatakit_data3:/data/db
+    ports:
+      - 27020:27017
+    restart: always
+    command: mongod --replSet mongo-replica-set
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongodatakit_express
+    ports:
+      - 8082:8081
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongodatakit_mongo1:27017/
+
+  mongo-init:
+    image: mongo
+    restart: "no"
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    command: >
+      mongosh --host mongodatakit_mongo1:27017 --eval
+      '
+      config = {
+        "_id": "mongo-replica-set",
+        "members": [
+          { "_id": 0, "host": "mongo1:27017" },
+          { "_id": 1, "host": "mongo2:27017" },
+          { "_id": 2, "host": "mongo3:27017" }
+        ]
+      };
+      rs.initiate(config);
+      '
+
+volumes:
+  mongodatakit_data1:
+  mongodatakit_data2:
+  mongodatakit_data3:
